@@ -1,6 +1,7 @@
-package nio3.kbs.gsm_scan_server.DataBase.Sourses;
+package nio3.kbs.gsm_scan_server.Service;
 
 import lombok.Data;
+import nio3.kbs.gsm_scan_server.DtoRouter.DtoRouter;
 
 @Data
 public class MonitoringServiceSettings {
@@ -14,4 +15,5 @@ public class MonitoringServiceSettings {
     public boolean isInit(){
         return lastId!=NOT_INIT;
     }
+    private DtoRouter dtoRouter;
 }

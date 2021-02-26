@@ -33,6 +33,9 @@ public class Settings {
         stantionList.forEach((stn)->{if (stn.getId()==stantion.getId()) deleted.set(stn);});
         stantionList.remove(deleted.get());
     }
+    public  void  clear(){
+        stantionList.clear();
+    }
     @PostConstruct
     public void init(){
        SettingsSerializator settingsSerializator=new SettingsSerializator();

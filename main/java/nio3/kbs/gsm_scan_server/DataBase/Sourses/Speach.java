@@ -3,6 +3,7 @@ package nio3.kbs.gsm_scan_server.DataBase.Sourses;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Data
 public class Speach {
@@ -28,4 +29,23 @@ public class Speach {
     private String S_DURATION;
     private String S_INCKEY;
     private String S_TYPE;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Speach)) return false;
+        Speach speach = (Speach) o;
+        return getId().equals(speach.getId()) &&
+                getDate().equals(speach.getDate()) &&
+                getLAC().equals(speach.getLAC()) &&
+                getCID().equals(speach.getCID()) &&
+                getIMEI().equals(speach.getIMEI()) &&
+                Objects.equals(getEvent(), speach.getEvent()) &&
+                Objects.equals(getEventType(), speach.getEventType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getDate(), getLAC(), getCID(), getIMEI(), getEvent(), getEventType());
+    }
 }

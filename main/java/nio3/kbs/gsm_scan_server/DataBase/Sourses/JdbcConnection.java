@@ -25,12 +25,6 @@ public class JdbcConnection {
         basicDataSource.setUsername(stantion.getUsername());
         basicDataSource.setPassword(stantion.getPassword());
         addConectionpropereties(stantion.getTypeConnection());
-/*
-        Properties paramConnection = new Properties();
-		paramConnection.setProperty("user", stantion.getUsername());
-		paramConnection.setProperty("password", stantion.getPassword());
-		paramConnection.setProperty("encoding", "WIN1251");
-*/
         return  new JdbcTemplate(basicDataSource);
     }
 

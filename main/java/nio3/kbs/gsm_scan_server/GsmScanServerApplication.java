@@ -3,12 +3,14 @@ package nio3.kbs.gsm_scan_server;
 import lombok.extern.slf4j.Slf4j;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.*;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.ibase.SpeachRepositoryIbaseImpl;
+import nio3.kbs.gsm_scan_server.Service.StantionScaningService;
 import nio3.kbs.gsm_scan_server.Service.StationProcessingService;
 import nio3.kbs.gsm_scan_server.clients.Settings;
 import nio3.kbs.gsm_scan_server.clients.Stantion;
 import nio3.kbs.gsm_scan_server.clients.stationSerializator.Serializator;
 import nio3.kbs.gsm_scan_server.clients.stationSerializator.SettingsSerializator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,84 +24,84 @@ import java.util.List;
 public class GsmScanServerApplication {
     @Autowired Settings settings;
     @Autowired
+    @Qualifier("StationMonitoring")
   private  StationProcessingService stationProcessingService;
+
+
+
 	public static void main(String[] args) {
 		SpringApplication.run(GsmScanServerApplication.class, args);
 		log.info("Сервер запущен");
 	}
 
     @PostConstruct
-    public void init() {
+    public void init() throws InterruptedException {
 
         //Десериализация станций
         JdbcConnection jdbcConnection =new JdbcConnection();
 
-/*
+        /*
+
         Stantion stantion=new Stantion();
         stantion.setUsername("sysdba");
         stantion.setPassword("masterkey");
         stantion.setTypeConnection(TypeConnection.InterBase);
         stantion.setFile("D:/interbase/NEW5_3.ibs");
         stantion.setHost("localhost");
-
         stantion.setName("123 Vas");
-        settings.add(stantion);
-        SettingsSerializator settingsSerializator=new SettingsSerializator();
-        settingsSerializator.serialize(settings);
-*/
 
-        JdbcTemplate jdbcTemplate= jdbcConnection.getJdbc(settings.getStantionList().get(0));
-        SpeachRepository speachRepository=new SpeachRepositoryIbaseImpl(jdbcTemplate);
 
-        //System.out.println(speachRepository.findAll());
-        //System.out.println(speachRepository.findById(4l).get());
-        // print(speachRepository.getAllByPeriod(new Date(10000),new Date()));
+        Stantion stantion1=new Stantion();
+        stantion1.setUsername("sysdba");
+        stantion1.setPassword("masterkey");
+        stantion1.setTypeConnection(TypeConnection.InterBase);
+        stantion1.setFile("D:/interbase/NEW5_3.ibs");
+        stantion1.setHost("localhost");
+        stantion1.setName("456 ");
+
+        */
+
+      //  settings.clear();
+      //  settings.add(stantion);
+      //  settings.add(stantion1);
+
+      //  SettingsSerializator settingsSerializator=new SettingsSerializator();
+      //  settingsSerializator.serialize(settings);
+
+
+       // JdbcTemplate jdbcTemplate= jdbcConnection.getJdbc(settings.getStantionList().get(0));
+       // SpeachRepository speachRepository=new SpeachRepositoryIbaseImpl(jdbcTemplate);
 
         /*
-
+        stationProcessingService.start();
         try {
-            Page p=new Page(10);
-            print(speachRepository.getPage(p));
-            p.next();
-            System.out.println("---------------------------------------------------");
-            Thread.sleep(2000);
-
-            print(speachRepository.getPage(p));
-            p.next();
-            System.out.println("---------------------------------------------------");
-            Thread.sleep(2000);
-
-
-            print(speachRepository.getPage(p));
-            p.next();
-            System.out.println("---------------------------------------------------");
-            Thread.sleep(2000);
-
+            Thread.sleep(10000);
+            stationProcessingService.stop();
+            Thread.sleep(10000);
+            stationProcessingService.start();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        */
-
+*/
         /*
-        Page p=new Page(10);
-        print( speachRepository.getPageOrderById(p));
-        p.next();
+        StantionScaningService stantionScaningService=new StantionScaningService();
+        stantionScaningService.setStantion(settings.getStantionList().get(0));
+        stantionScaningService.setConnectionFactory(new ConnectionFactory());
+        stantionScaningService.start();
 
-        print( speachRepository.getPageOrderById(p));
-        p.next();
+        stantionScaningService.stop();
+*/
 
-        print( speachRepository.getPageOrderById(p));
-        p.next();
+        //Тест роутов и многопоточности
 
-        */
-        // print(speachRepository.findAllByIdMore(new Page(50),2000l));
-
-       // System.out.println(speachRepository.findLastId());
-
-        stationProcessingService.start();
+      //  stationProcessingService.start();
 
     }
 
+    /**
+     * Для тестов
+     * @param speachList
+     */
 	void print(List<Speach> speachList)
     {
         speachList.forEach(s->{

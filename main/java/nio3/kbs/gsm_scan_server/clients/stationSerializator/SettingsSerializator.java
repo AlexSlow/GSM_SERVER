@@ -47,7 +47,8 @@ private Path path;
     }
     private void initFile() throws IOException {
         path= Paths.get(stantions);
-        if (Files.notExists(path)) Files.createFile(path);
+        if (Files.exists(path)) Files.delete(path);
+        Files.createFile(path);
     }
     private  String GetSettingsFile() {
         try {
@@ -61,10 +62,7 @@ private Path path;
         ArrayList<String> jsonString = new ArrayList<String>();
         jsonString.add(new Gson().toJson(settings));
         try {
-            if(path.toFile().exists()) {
-                path.toFile().delete();
-            }
-            path.toFile().createNewFile();
+
             Files.write(path, jsonString, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
