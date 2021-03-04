@@ -3,18 +3,20 @@ package nio3.kbs.gsm_scan_server.clients;
 import lombok.Data;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.TypeConnection;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Objects;
 
 @Data
-public class Stantion {
-    private Integer id;
+public class Stantion implements Serializable {
+    private transient Integer id;
     private String name;
    private String username;
    private String password;
    private String host;
    private String file;
    private TypeConnection typeConnection;
+   private transient boolean isActive=false;
 
     @Override
     public boolean equals(Object o) {

@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Для запуска и определения цепочки алгоритмов
+ */
 @Component
 public class AlgoritmManager {
 

@@ -40,7 +40,7 @@ public class GsmScanServerApplication {
         //Десериализация станций
         JdbcConnection jdbcConnection =new JdbcConnection();
 
-        /*
+/*
 
         Stantion stantion=new Stantion();
         stantion.setUsername("sysdba");
@@ -59,15 +59,15 @@ public class GsmScanServerApplication {
         stantion1.setHost("localhost");
         stantion1.setName("456 ");
 
-        */
 
-      //  settings.clear();
-      //  settings.add(stantion);
-      //  settings.add(stantion1);
+       settings.clear();
+       settings.add(stantion);
+       settings.add(stantion1);
 
-      //  SettingsSerializator settingsSerializator=new SettingsSerializator();
-      //  settingsSerializator.serialize(settings);
 
+        SettingsSerializator settingsSerializator=new SettingsSerializator();
+        settingsSerializator.serialize(settings);
+*/
 
        // JdbcTemplate jdbcTemplate= jdbcConnection.getJdbc(settings.getStantionList().get(0));
        // SpeachRepository speachRepository=new SpeachRepositoryIbaseImpl(jdbcTemplate);

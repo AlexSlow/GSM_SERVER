@@ -38,7 +38,7 @@ public class webSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         registry.enableSimpleBroker("/topic/","/queue/");
     }
 
-/*
+
     @Override
     public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
         DefaultContentTypeResolver resolver = new DefaultContentTypeResolver();
@@ -49,6 +49,6 @@ public class webSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         messageConverters.add(converter);
         return false;
     }
-    */
+
 
     }

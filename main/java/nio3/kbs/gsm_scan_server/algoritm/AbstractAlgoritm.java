@@ -35,5 +35,5 @@ public abstract class AbstractAlgoritm implements Algoritm {
     /**
      * Этот метод нужно переопределять в классах потомках
      */
-    protected abstract void processSpeaches();
+    protected abstract void processEntry();
 }

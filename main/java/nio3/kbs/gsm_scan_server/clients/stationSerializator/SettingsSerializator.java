@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @Slf4j
 public class SettingsSerializator implements Serializator<Settings> {
-private final String stantions="stantions.json";
+private final String file_name="stantions.json";
 private Path path;
     @Override
     public void serialize(Settings settings) {
@@ -28,25 +28,25 @@ private Path path;
 
         } catch (IOException e) {
             e.printStackTrace();
-            log.warn("Ошибка создания файла "+stantions);
+            log.warn("Ошибка создания файла "+file_name);
         }
     }
 
     @Override
     public Settings deserialize() {
 
-        log.debug("Начало сериализации станций");
-        try {
-            initFile();
+        log.debug("Начало десериализации станций");
+        path=Paths.get(file_name);
+            if (Files.exists(path))
             return new Gson().fromJson(GetSettingsFile(), Settings.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.warn("ошибка. Нет файла "+stantions);
-        }
+           else {
+                log.warn("ошибка. Нет файла "+file_name);
+            }
+
         return null;
     }
     private void initFile() throws IOException {
-        path= Paths.get(stantions);
+        path= Paths.get(file_name);
         if (Files.exists(path)) Files.delete(path);
         Files.createFile(path);
     }
@@ -60,6 +60,7 @@ private Path path;
 
     private   void SaveSettings(Settings settings) {
         ArrayList<String> jsonString = new ArrayList<String>();
+        settings.setActive(false);
         jsonString.add(new Gson().toJson(settings));
         try {
 

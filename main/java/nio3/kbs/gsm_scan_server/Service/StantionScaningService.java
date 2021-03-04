@@ -1,6 +1,6 @@
 package nio3.kbs.gsm_scan_server.Service;
 
-import com.sun.istack.internal.NotNull;
+
 import lombok.Data;
 import lombok.extern.log4j.Log4j;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.ConnectionFactory;

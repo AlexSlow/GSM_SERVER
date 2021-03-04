@@ -10,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Log4j
 @Data
-public class AlgoritmRouter extends DtoRouter {
+public class AlgoritmRouter extends DtoRouter<List<StantionSpeachDTO>> {
     private AlgoritmManager algoritmManager;
 
 

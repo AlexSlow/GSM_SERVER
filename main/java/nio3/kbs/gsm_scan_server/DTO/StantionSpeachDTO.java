@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Data
 public class StantionSpeachDTO {
-    private Stantion stantion;
+    private StantionDto stantionDto;
     private Speach speach;
 
     @Override
@@ -15,12 +15,12 @@ public class StantionSpeachDTO {
         if (this == o) return true;
         if (!(o instanceof StantionSpeachDTO)) return false;
         StantionSpeachDTO that = (StantionSpeachDTO) o;
-        return getStantion().equals(that.getStantion()) &&
+        return getStantionDto().equals(that.getStantionDto()) &&
                 getSpeach().equals(that.getSpeach());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getStantion(), getSpeach());
+        return Objects.hash(getStantionDto(), getSpeach());
     }
 }
