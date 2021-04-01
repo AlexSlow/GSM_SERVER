@@ -3,12 +3,8 @@ package nio3.kbs.gsm_scan_server;
 import lombok.extern.slf4j.Slf4j;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.*;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.ibase.SpeachRepositoryIbaseImpl;
-import nio3.kbs.gsm_scan_server.Service.StantionScaningService;
-import nio3.kbs.gsm_scan_server.Service.StationProcessingService;
+import nio3.kbs.gsm_scan_server.Service.StantionProcessingService;
 import nio3.kbs.gsm_scan_server.clients.Settings;
-import nio3.kbs.gsm_scan_server.clients.Stantion;
-import nio3.kbs.gsm_scan_server.clients.stationSerializator.Serializator;
-import nio3.kbs.gsm_scan_server.clients.stationSerializator.SettingsSerializator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -16,7 +12,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.annotation.PostConstruct;
-import java.util.Date;
 import java.util.List;
 
 @SpringBootApplication
@@ -25,7 +20,7 @@ public class GsmScanServerApplication {
     @Autowired Settings settings;
     @Autowired
     @Qualifier("StationMonitoring")
-  private  StationProcessingService stationProcessingService;
+  private StantionProcessingService stantionProcessingService;
 
 
 
@@ -69,20 +64,15 @@ public class GsmScanServerApplication {
         settingsSerializator.serialize(settings);
 */
 
-       // JdbcTemplate jdbcTemplate= jdbcConnection.getJdbc(settings.getStantionList().get(0));
-       // SpeachRepository speachRepository=new SpeachRepositoryIbaseImpl(jdbcTemplate);
-
         /*
-        stationProcessingService.start();
-        try {
-            Thread.sleep(10000);
-            stationProcessingService.stop();
-            Thread.sleep(10000);
-            stationProcessingService.start();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-*/
+        System.out.println(settings.getStantionList().get(0));
+        JdbcTemplate jdbcTemplate= jdbcConnection.getJdbc(settings.getStantionList().get(0));
+        SpeachRepository speachRepository=new SpeachRepositoryIbaseImpl(jdbcTemplate);
+
+        print(speachRepository.getPage(new Page(100)));
+    */
+
+
         /*
         StantionScaningService stantionScaningService=new StantionScaningService();
         stantionScaningService.setStantion(settings.getStantionList().get(0));

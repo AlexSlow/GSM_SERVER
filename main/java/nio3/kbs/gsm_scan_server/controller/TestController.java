@@ -16,6 +16,11 @@ public class TestController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @GetMapping("/testServer")
+    public ResponseEntity<?> testServer (){
+     return  new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PostMapping("/testPost")
     public ResponseEntity<Client> test (@RequestBody Client client){
         System.out.println(client);
@@ -48,6 +53,8 @@ public class TestController {
             return new ResponseEntity<String>("Error",HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
     @MessageMapping("/test")
     public void test (@Payload Client message,

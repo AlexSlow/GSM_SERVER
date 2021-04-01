@@ -24,7 +24,7 @@ public class SpeachIbaseRowExtractorIbase implements ResultSetExtractor<List<Spe
             speach.setStation(rs.getString("S_BASESTATION"));
             speach.setLAC(rs.getString("S_LAC"));
             speach.setCID(rs.getString("S_CID"));
-            speach.setIMSI(rs.getString("TMSI"));
+            speach.setTMSI(rs.getString("TMSI"));
             speach.setIMEI(rs.getString("IMEI"));
             speach.setEvent(rs.getString("Events"));
             speach.setEventType(rs.getString("EventType"));

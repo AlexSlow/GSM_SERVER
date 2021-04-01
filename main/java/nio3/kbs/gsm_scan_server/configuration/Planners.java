@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.PeriodicTrigger;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ErrorHandler;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,10 +19,13 @@ public class Planners {
         scheduler.setThreadNamePrefix("STANTION -");
         scheduler.setAwaitTerminationSeconds(60);
         scheduler.setWaitForTasksToCompleteOnShutdown(true);
+        scheduler.setRemoveOnCancelPolicy(true);
+     //   scheduler.setErrorHandler(errorHandler);
         scheduler.initialize();
         return scheduler;
     }
-    public PeriodicTrigger getTrigger(Integer time){
+    public PeriodicTrigger getTrigger(Integer time)
+    {
         return new PeriodicTrigger(time, TimeUnit.SECONDS);
     }
 }

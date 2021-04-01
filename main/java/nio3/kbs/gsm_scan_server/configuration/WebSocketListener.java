@@ -18,6 +18,7 @@ import java.security.Principal;
 public class WebSocketListener {
 
     @Autowired private ClientService clientService;
+
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
     @EventListener

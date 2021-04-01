@@ -1,7 +1,9 @@
 package nio3.kbs.gsm_scan_server.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.log4j.Log4j;
 import nio3.kbs.gsm_scan_server.websocket.CustomHandshakeHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.DefaultContentTypeResolver;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -12,11 +14,12 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.server.RequestUpgradeStrategy;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 import org.springframework.web.socket.server.standard.TomcatRequestUpgradeStrategy;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 import java.util.List;
-
+@Log4j
 @Configuration
 @EnableWebSocketMessageBroker
 public class webSocketConfiguration implements WebSocketMessageBrokerConfigurer  {
@@ -48,6 +51,15 @@ public class webSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         converter.setContentTypeResolver(resolver);
         messageConverters.add(converter);
         return false;
+    }
+
+    @Bean
+    public ServletServerContainerFactoryBean createServletServerContainerFactoryBean() {
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        container.setMaxTextMessageBufferSize(32768);
+        container.setMaxBinaryMessageBufferSize(32768);
+        log.info("Websocket factory returned");
+        return container;
     }
 
 

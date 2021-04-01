@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Для работы с клиентами.
@@ -22,7 +23,7 @@ public class ClientService implements ClientServiceInterface {
     /**
      * ПОдписки клиентов (на станции)
      */
-    private Map<Client, StantionDto> clientStantionMap;
+    private volatile Map<Client, StantionDto> clientStantionMap;
     private List<Client> clients;
     @Autowired private StantionToDtoFactory stantionToDtoFactory;
     @Autowired private Settings settings;
@@ -83,9 +84,8 @@ public class ClientService implements ClientServiceInterface {
         Optional<Client> client=getClientByUUID(UUID);
         if (client.isPresent())
         {
-            //Проверить, есть ли такая подписка
-           StantionDto subscriberStantionPast=clientStantionMap.get(client.get());
            clientStantionMap.put(client.get(),stantionDto);
+           System.out.println(clientStantionMap);
         }else {
             log.error("Ошибка при подписке клиента.Нет пользователя с таким UUID.");
         }
@@ -121,7 +121,7 @@ public class ClientService implements ClientServiceInterface {
     @PostConstruct
     public void init(){
       clients=new ArrayList<>();
-      clientStantionMap=new HashMap<>();
+      clientStantionMap=new ConcurrentHashMap<>();
     }
 }
 

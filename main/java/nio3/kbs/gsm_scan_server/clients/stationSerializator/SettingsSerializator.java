@@ -60,7 +60,7 @@ private Path path;
 
     private   void SaveSettings(Settings settings) {
         ArrayList<String> jsonString = new ArrayList<String>();
-        settings.setActive(false);
+       // settings.setActive(false);
         jsonString.add(new Gson().toJson(settings));
         try {
 

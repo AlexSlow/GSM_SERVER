@@ -11,6 +11,8 @@ import nio3.kbs.gsm_scan_server.factory.SpeachFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Вид службы определяется настройками
@@ -19,7 +21,8 @@ import java.util.List;
 @Data
 public class RunableSpeachMonitoring implements Runnable {
 
-    private Page page=new Page(50);
+    private volatile Future future;
+    private Page page=new Page(100);
     private List<Speach> speaches=new ArrayList<>();
     private Stantion stantion;
     private MonitoringServiceSettings monitoringServiceSettings;
@@ -27,19 +30,34 @@ public class RunableSpeachMonitoring implements Runnable {
     private SpeachFactory speachFactory;
     @Override
     public void run() {
-        //1 Мы  должны определить настройки. ПОлучим последний id (Для службы сканирования)
-      init();
-     //Получить все записи, после текущего id
-     boolean isEnd=false;
-     while (!isEnd)
-     {
-         speaches.clear();
-         speaches=getSpeaches();
-         isEnd=checkIfEndOrFindLastId();
-         giveSpeachesForProcessing(speaches);
-         //page.next();
-     }
+
+        try {
+
+            //1 Мы  должны определить настройки. ПОлучим последний id (Для службы сканирования)
+            init();
+            //Получить все записи, после текущего id
+            boolean isEnd=false;
+            while (!isEnd)
+            {
+                speaches.clear();
+                speaches=getSpeaches();
+                isEnd=checkIfEndOrFindLastId();
+                giveSpeachesForProcessing(speaches);
+                //page.next();
+            }
+
+        }catch (Exception e){
+            log.warn(e.getMessage());
+            this.stantion.setActive(false);
+            future.cancel(true);
+                monitoringServiceSettings.getCustomErrorHandler().onError(e);
+
+
+        }
+
     }
+
+
 
     /**
      * Получить последний id в коллекции
@@ -54,29 +72,19 @@ public class RunableSpeachMonitoring implements Runnable {
     protected void init(){
         if (!monitoringServiceSettings.isInit()) {
             monitoringServiceSettings.setLastId(speachRepository.findLastId());
-            log.debug("получен id " + monitoringServiceSettings.getLastId());
+        //    log.debug("получен id " + monitoringServiceSettings.getLastId());
         }
     }
     protected List<Speach> getSpeaches(){
         return speachRepository.findAllByIdMore(page,monitoringServiceSettings.getLastId());
     }
     protected boolean checkIfEndOrFindLastId(){
-        /*
-        //ПРоверка на прерывание потока
-        if (Thread.interrupted()) {
-            log.info("прерывание потока ...");
-            return false;
-        }
-        */
         Long lastId=getLastId(speaches);
         if (lastId==MonitoringServiceSettings.EMPTY_ROW) {
-          //  log.debug("Отсутствуют записи");
             return true; //Страница пустая
 
         }else
         {
-            //Записан lastid
-           // log.debug("Новый lid= "+lastId);
             monitoringServiceSettings.setLastId(lastId);
         }
         return false;
@@ -84,8 +92,9 @@ public class RunableSpeachMonitoring implements Runnable {
 
     private void giveSpeachesForProcessing(List<Speach> speaches){
         //Упаковка данных в DTO для обработки
-        System.out.println(speaches);
-        List<StantionSpeachDTO> stantionSpeachDTOS= speachFactory.factory(speaches,stantion);
+       // System.out.println(speaches);
+        StantionSpeachDTO stantionSpeachDTOS= speachFactory.factory(speaches,stantion);
+        monitoringServiceSettings.getDtoRouter().route(stantionSpeachDTOS);
     }
 
 

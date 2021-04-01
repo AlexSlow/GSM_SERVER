@@ -13,8 +13,8 @@ import java.util.List;
 public class AlgoritmManager {
 
 
-    public void processByAlgorithm(List<StantionSpeachDTO> stantionSpeachDTOS){
+    public void processByAlgorithm(StantionSpeachDTO stantionSpeachDTO){
 
-        System.out.println(" менеджер алгоритмов "+stantionSpeachDTOS);
+       // System.out.println(" менеджер алгоритмов "+stantionSpeachDTO);
     }
 }

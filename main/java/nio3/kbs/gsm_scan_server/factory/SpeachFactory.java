@@ -12,13 +12,14 @@ import java.util.List;
 @Component
 public class SpeachFactory {
     @Autowired private StantionToDtoFactory stantionToDtoFactory;
-  public   StantionSpeachDTO factory(Speach speach, Stantion stantion)
+  public   StantionSpeachDTO factory(List<Speach> speaches, Stantion stantion)
     {
         StantionSpeachDTO stantionSpeachDTO=new StantionSpeachDTO();
-        stantionSpeachDTO.setSpeach(speach);
+        stantionSpeachDTO.setSpeachList(speaches);
         stantionSpeachDTO.setStantionDto(stantionToDtoFactory.factory(stantion));
         return stantionSpeachDTO;
     }
+    /*
     public List<StantionSpeachDTO> factory(List<Speach> speaches,Stantion stantion)
     {
         List<StantionSpeachDTO> stantionSpeachDTOS=new ArrayList<>();
@@ -27,4 +28,5 @@ public class SpeachFactory {
         });
         return stantionSpeachDTOS;
     }
+     */
 }

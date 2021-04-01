@@ -2,8 +2,10 @@ package nio3.kbs.gsm_scan_server.DataBase.Sourses;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Page {
+public class Page implements Serializable {
     //Конечная строка в базах данных
     private Long endRow=-1l;
     private boolean isEnd=false;
@@ -29,5 +31,6 @@ public class Page {
     public Integer  getEndofPage(){
         return startRow+limit;
     }
+
 
 }

@@ -23,9 +23,37 @@ public class Settings {
     private static Integer idCount=0;
     private List<Stantion> stantionList=new ArrayList<>();
 
-    public void add(@NonNull nio3.kbs.gsm_scan_server.clients.Stantion stantion){
+    /**
+     * Предназначен при инициализацц станций для перераспределения id
+     * @param stantion
+     */
+    public void addAndGenerateId(Stantion stantion){
         stantion.setId(idCount++);
         stantionList.add(stantion);
+    }
+
+    /**
+     * При обновлении станции. Если Id будет не пустым, то будет обновление.
+     * @param stantion
+     */
+
+    public void add(@NonNull Stantion stantion){
+        if (stantion.getId()==null) {
+            stantion.setId(idCount++);
+            stantionList.add(stantion);
+        }else {
+            Stantion oldStantion=getById(stantion.getId());
+           if (oldStantion!=null) {
+               oldStantion.setName(stantion.getName());
+               oldStantion.setFile(stantion.getFile());
+               oldStantion.setHost(stantion.getHost());
+               oldStantion.setTypeConnection(stantion.getTypeConnection());
+               oldStantion.setPassword(stantion.getPassword());
+               oldStantion.setUsername(stantion.getUsername());
+               oldStantion.setCoord_X(stantion.getCoord_X());
+               oldStantion.setCoord_Y(stantion.getCoord_Y());
+            }
+        }
 
     }
     public void addList(List<Stantion> stantions){
@@ -37,6 +65,15 @@ public class Settings {
             log.warn("Список станций пуст!");
         }
     }
+
+    public void addListWithGenerateId(List<Stantion> stantions){
+        if (stantions!=null){
+            stantions.forEach(s->{
+                this.addAndGenerateId(s);
+            });
+        }
+    }
+
     public Stantion getById(Integer id){
         for(Stantion stantion:stantionList) if (stantion.getId().equals(id)) return stantion;
         throw new RuntimeException("Отстуствует станция");
@@ -58,12 +95,11 @@ public class Settings {
        Settings settings= settingsSerializator.deserialize();
        if (settings==null) return;
        if (settings.stantionList!=null)
-       this.addList(settings.stantionList);
+           settings.stantionList.forEach(s->s.setActive(false));
+       this.addListWithGenerateId(settings.stantionList);
        this.TimeOut=settings.TimeOut;
        this.TimeQuery=settings.TimeQuery;
-
        log.info("Инициализация станций");
-       System.out.println(this);
     }
 
     /**
@@ -76,6 +112,7 @@ public class Settings {
 
     /**
      * Нужно для сброса активности перед сериализаций (в будущем нужно оптимизировать)
+     * Уже устарел, так как активность теперь не сериализуется
      * @param isActive
      */
     public void setActive(boolean isActive){

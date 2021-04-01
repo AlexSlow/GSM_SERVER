@@ -19,7 +19,7 @@ public abstract class AbstractAlgoritm implements Algoritm {
     }
 
     @Override
-    public void check(List<StantionSpeachDTO> stantionSpeachDTOS) {
+    public void check(StantionSpeachDTO stantionSpeachDTOS) {
         if (result==null) result=new HashMap<>();
     }
 

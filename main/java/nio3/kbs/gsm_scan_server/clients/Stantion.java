@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Data
 public class Stantion implements Serializable {
-    private transient Integer id;
+    private Integer id;
     private String name;
    private String username;
    private String password;
@@ -17,6 +17,8 @@ public class Stantion implements Serializable {
    private String file;
    private TypeConnection typeConnection;
    private transient boolean isActive=false;
+   private Double coord_X;
+   private Double coord_Y;
 
     @Override
     public boolean equals(Object o) {

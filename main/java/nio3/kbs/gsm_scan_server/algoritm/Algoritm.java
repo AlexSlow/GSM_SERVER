@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface Algoritm {
-    void check(List<StantionSpeachDTO> stantionSpeachDTOS);
+    void check(StantionSpeachDTO stantionSpeachDTO);
     void setResult(Map<StantionSpeachDTO, SpeachAlgoritmInfoDTO> result);
     Map<StantionSpeachDTO, SpeachAlgoritmInfoDTO> getResult ();
 }

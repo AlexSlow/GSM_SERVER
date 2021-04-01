@@ -31,6 +31,7 @@ public class webSocket {
 
     public static final String SET_CLIENT_INFORMATION="/queue/getClient";
 
+
     @Autowired private ClientServiceInterface clientService;
     @Autowired private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -44,11 +45,10 @@ public class webSocket {
     @MessageMapping(ADD_INFORMATION_ABOUT_CLIENT)
     public void addInformationOboutClient (@Payload Client message,
                                Principal user){
-        System.out.println("Пришел запрос на уточнение пользователя");
         try {
             clientService.addInformationOboutClient(user.getName(),message);
             Optional<Client> client=clientService.getClientByUUID(user.getName());
-            System.out.println(client);
+         //   System.out.println(client);
             simpMessagingTemplate.convertAndSendToUser(user.getName(),
             SET_CLIENT_INFORMATION,client.get());
 

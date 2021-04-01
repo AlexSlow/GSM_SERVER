@@ -1,5 +1,6 @@
 package nio3.kbs.gsm_scan_server.DataBase.Sourses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Objects;
 @Data
 public class Speach {
     private Long id;
+
     private Date date;
     private String Operator;
     private String IMSI;
@@ -29,6 +31,10 @@ public class Speach {
     private String S_DURATION;
     private String S_INCKEY;
     private String S_TYPE;
+
+
+    public Speach() {
+    }
 
     @Override
     public boolean equals(Object o) {
