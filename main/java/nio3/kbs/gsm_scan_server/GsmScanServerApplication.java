@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-
+@EnableScheduling
+@EnableCaching
 @SpringBootApplication
 @Slf4j
 public class GsmScanServerApplication {
@@ -64,13 +67,14 @@ public class GsmScanServerApplication {
         settingsSerializator.serialize(settings);
 */
 
-        /*
+/*
         System.out.println(settings.getStantionList().get(0));
         JdbcTemplate jdbcTemplate= jdbcConnection.getJdbc(settings.getStantionList().get(0));
         SpeachRepository speachRepository=new SpeachRepositoryIbaseImpl(jdbcTemplate);
 
-        print(speachRepository.getPage(new Page(100)));
-    */
+        System.out.println(speachRepository.getAbbonentForDateAmmount());
+       // print(speachRepository.getPage(new Page(100)));
+*/
 
 
         /*

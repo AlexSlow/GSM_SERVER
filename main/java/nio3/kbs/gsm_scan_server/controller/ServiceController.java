@@ -19,6 +19,7 @@ import java.util.List;
 public class ServiceController {
     private static final String START="start";
     private static final String STOP="stop";
+    private static final String STATUS="status";
 
     @Autowired private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -27,6 +28,7 @@ public class ServiceController {
     @GetMapping(START)
     ResponseEntity<?> start(){
         try {
+            if (!stantionProcessingService.getStatus())
             stantionProcessingService.start();
             simpMessagingTemplate.convertAndSend(Topics.TOPIC_MONITORING_STATUS,true);
             return new ResponseEntity<>( HttpStatus.OK);
@@ -40,9 +42,20 @@ public class ServiceController {
     ResponseEntity<?> stop(){
         try {
             log.info("Остановка мониторинга");
+            if (stantionProcessingService.getStatus())
             stantionProcessingService.stop();
             simpMessagingTemplate.convertAndSend(Topics.TOPIC_MONITORING_STATUS,false);
             return new ResponseEntity<>( HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping(STATUS)
+    ResponseEntity<?> status(){
+        try {
+            log.info("Получение статуса");
+            return new ResponseEntity<>(stantionProcessingService.getStatus(), HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

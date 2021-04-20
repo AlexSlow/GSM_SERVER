@@ -1,5 +1,7 @@
 package nio3.kbs.gsm_scan_server.DataBase.Sourses;
 
+import nio3.kbs.gsm_scan_server.DTO.SpeachAbbenentDateAmount;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +16,9 @@ public interface SpeachRepository {
   Long getCountofRows();
   //Получить все записи (Постранично), у которых id больше чем id
   List<Speach> findAllByIdMore(Page p,Long id);
+  List<Speach> getPageLessId(Page p,Long id);
   //Получить последний id для мониторинга
   Long findLastId ();
+  void ping();
+
 }

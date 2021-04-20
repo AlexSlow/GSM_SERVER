@@ -9,14 +9,14 @@ import java.util.Objects;
 
 @Data
 public class Stantion implements Serializable {
-    private Integer id;
+    private Long id;
     private String name;
    private String username;
    private String password;
    private String host;
    private String file;
    private TypeConnection typeConnection;
-   private transient boolean isActive=false;
+   private transient StantionStatus status=StantionStatus.notAvailable;
    private Double coord_X;
    private Double coord_Y;
 
@@ -26,11 +26,13 @@ public class Stantion implements Serializable {
         if (!(o instanceof Stantion)) return false;
         Stantion stantion = (Stantion) o;
         return getId().equals(stantion.getId()) &&
-                Objects.equals(getName(), stantion.getName());
+                getName().equals(stantion.getName()) &&
+                getHost().equals(stantion.getHost()) &&
+                getFile().equals(stantion.getFile());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName());
+        return Objects.hash(getId(), getName(), getHost(), getFile());
     }
 }

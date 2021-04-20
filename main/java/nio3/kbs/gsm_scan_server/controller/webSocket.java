@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
 import nio3.kbs.gsm_scan_server.DTO.Response;
 import nio3.kbs.gsm_scan_server.DTO.StantionDto;
-import nio3.kbs.gsm_scan_server.clients.Client;
-import nio3.kbs.gsm_scan_server.clients.ClientServiceInterface;
-import nio3.kbs.gsm_scan_server.clients.Settings;
-import nio3.kbs.gsm_scan_server.clients.Stantion;
+import nio3.kbs.gsm_scan_server.clients.*;
 
 import nio3.kbs.gsm_scan_server.factory.StantionToDtoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +31,7 @@ public class webSocket {
 
     @Autowired private ClientServiceInterface clientService;
     @Autowired private SimpMessagingTemplate simpMessagingTemplate;
-
+    @Autowired private ClientNotify clientNotify;
 
     /**
      * Сервер получает информацию о пользователю и возвращает его uuid
@@ -51,6 +48,7 @@ public class webSocket {
          //   System.out.println(client);
             simpMessagingTemplate.convertAndSendToUser(user.getName(),
             SET_CLIENT_INFORMATION,client.get());
+            clientNotify.sendAllUsers(clientService.getAll());
 
         }catch (Exception e){
             log.error(e.getMessage());

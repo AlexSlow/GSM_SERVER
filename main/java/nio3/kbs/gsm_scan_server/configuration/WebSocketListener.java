@@ -2,6 +2,7 @@ package nio3.kbs.gsm_scan_server.configuration;
 
 import lombok.extern.log4j.Log4j;
 import nio3.kbs.gsm_scan_server.clients.Client;
+import nio3.kbs.gsm_scan_server.clients.ClientNotify;
 import nio3.kbs.gsm_scan_server.clients.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -18,6 +19,7 @@ import java.security.Principal;
 public class WebSocketListener {
 
     @Autowired private ClientService clientService;
+    @Autowired private ClientNotify clientNotify;
 
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
@@ -37,6 +39,7 @@ public class WebSocketListener {
         if(username != null) {
             clientService.remove(username.getName());
         }
+        clientNotify.sendAllUsers(clientService.getAll());
     }
 
 

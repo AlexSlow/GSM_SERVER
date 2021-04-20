@@ -26,11 +26,16 @@ public class ClientService implements ClientServiceInterface {
     private volatile Map<Client, StantionDto> clientStantionMap;
     private List<Client> clients;
     @Autowired private StantionToDtoFactory stantionToDtoFactory;
-    @Autowired private Settings settings;
+    @Autowired private volatile Settings settings;
     @Override
     public Optional<Client> getClientByUUID(String UUID){
         for(Client client:clients) if (client.getUUID().equals(UUID)) return Optional.of(client);
         return Optional.empty();
+    }
+
+    @Override
+    public List<Client> getAll() {
+       return getClients();
     }
 
     @Override
@@ -77,7 +82,7 @@ public class ClientService implements ClientServiceInterface {
     }
 
     @Override
-    public void subscribe(String UUID, Integer stantionDtoId) {
+    public void subscribe(String UUID, Long stantionDtoId) {
 
         StantionDto stantionDto =stantionToDtoFactory.factory(settings.getById(stantionDtoId));
         log.info("Запрос на подписку пользователя "+UUID+" на станцию "+stantionDto.getName());
@@ -120,7 +125,7 @@ public class ClientService implements ClientServiceInterface {
 
     @PostConstruct
     public void init(){
-      clients=new ArrayList<>();
+      clients=Collections.synchronizedList(new ArrayList<>());
       clientStantionMap=new ConcurrentHashMap<>();
     }
 }

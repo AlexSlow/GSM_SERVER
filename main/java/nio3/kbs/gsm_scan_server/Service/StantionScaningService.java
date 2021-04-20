@@ -62,4 +62,10 @@ runableSpeachMonitoring.setFuture(future);
     public void stop() {
     future.cancel(true);
     }
+
+    @Override
+    public Boolean getStatus() {
+        if (future==null) return false;
+        return future.isDone();
+    }
 }

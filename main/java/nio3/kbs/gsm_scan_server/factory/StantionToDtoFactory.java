@@ -11,7 +11,7 @@ import java.util.List;
 public class StantionToDtoFactory {
     public StantionDto factory(Stantion stantion){
         StantionDto stantionDto=new StantionDto();
-        stantionDto.setActive(stantion.isActive());
+        stantionDto.setStatus(stantion.getStatus());
         stantionDto.setId(stantion.getId());
         stantionDto.setName(stantion.getName());
         return stantionDto;

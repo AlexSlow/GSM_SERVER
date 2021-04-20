@@ -16,7 +16,8 @@ import java.util.Properties;
 
 
 public class JdbcConnection {
-    private static  BasicDataSource basicDataSource =new BasicDataSource();
+    //Был статический
+    private   BasicDataSource basicDataSource =new BasicDataSource();
 
     public JdbcTemplate getJdbc(Stantion stantion) {
         basicDataSource.setDriverClassName(getDriver(stantion.getTypeConnection()));

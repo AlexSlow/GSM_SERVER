@@ -7,6 +7,7 @@ import nio3.kbs.gsm_scan_server.DataBase.Sourses.Page;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.Speach;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.SpeachRepository;
 import nio3.kbs.gsm_scan_server.clients.Stantion;
+import nio3.kbs.gsm_scan_server.clients.StantionStatus;
 import nio3.kbs.gsm_scan_server.factory.SpeachFactory;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class RunableSpeachMonitoring implements Runnable {
 
         }catch (Exception e){
             log.warn(e.getMessage());
-            this.stantion.setActive(false);
+            this.stantion.setStatus(StantionStatus.notAvailable);
             future.cancel(true);
                 monitoringServiceSettings.getCustomErrorHandler().onError(e);
 

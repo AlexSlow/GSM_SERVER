@@ -24,7 +24,7 @@ public class Alerter implements ClientNotify {
 
     @Override
     public void sendAllUsers(List<Client> clients) {
-        //simpMessagingTemplate.convertAndSend(Topics.TOPIC_STANTION_DTO,clients);
+        simpMessagingTemplate.convertAndSend(Topics.TOPIC_CLIENTS,clientService.getClients());
     }
 
     @Override
@@ -43,9 +43,6 @@ public class Alerter implements ClientNotify {
          List<Client> clients=getClients(clientService.getClientStantionMap(),
                  stantionSpeachDTO.getStantionDto());
 
-        // System.out.println("Отправка клиентам "+ new Date() + clients);
-        // System.out.println(stantionSpeachDTO.getSpeachList());
-        // System.out.println(clientStantionMap);
 
          clients.forEach(c->{simpMessagingTemplate.
                  convertAndSendToUser(c.getUUID(),Topics.TOPIC_SPEACH,stantionSpeachDTO);});

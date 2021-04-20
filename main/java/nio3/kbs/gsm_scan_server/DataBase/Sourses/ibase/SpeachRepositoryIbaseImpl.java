@@ -1,19 +1,17 @@
 package nio3.kbs.gsm_scan_server.DataBase.Sourses.ibase;
 
 import lombok.Data;
+import nio3.kbs.gsm_scan_server.DTO.SpeachAbbenentDateAmount;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.Page;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.Speach;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.SpeachRepository;
 import nio3.kbs.gsm_scan_server.DataBase.Sourses.SqlSort;
-import nio3.kbs.gsm_scan_server.DataBase.Sourses.ibase.SpeachIbaseRowExtractorIbase;
-import nio3.kbs.gsm_scan_server.DataBase.Sourses.ibase.SpeachRowMapperIbase;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -24,14 +22,18 @@ private JdbcTemplate jdbcTemplate;
 public SpeachRepositoryIbaseImpl(JdbcTemplate jbdc){
     jdbcTemplate=jbdc;
 }
-    private  String getAll = "SELECT ST.S_TYPE, ST.S_INCKEY, ST.S_DATETIME, ST.S_NETWORK, ST.S_SYSNUMBER IMSI, ST.S_BASESTATION, ST.S_LAC, ST.S_CID, ST.S_SYSNUMBER2 TMSI, ST.S_SYSNUMBER3 IMEI, E.VAL_NAME Events, C.VAL_NAME EventType, S.VAL_NAME Status, SS.VAL_NAME Sign, ST.S_RCHANNEL, ST.S_DCHANNEL, ST.S_STANDARD, ST.S_DEVICEID, ST.S_EVENTCODE, ST.S_FREQUENCY, ST.S_DURATION " +
+    private final  String getAll = "SELECT ST.S_TYPE, ST.S_INCKEY, ST.S_DATETIME, ST.S_NETWORK, ST.S_SYSNUMBER IMSI, ST.S_BASESTATION, ST.S_LAC, ST.S_CID, ST.S_SYSNUMBER2 TMSI, ST.S_SYSNUMBER3 IMEI, E.VAL_NAME Events, C.VAL_NAME EventType, S.VAL_NAME Status, SS.VAL_NAME Sign, ST.S_RCHANNEL, ST.S_DCHANNEL, ST.S_STANDARD, ST.S_DEVICEID, ST.S_EVENTCODE, ST.S_FREQUENCY, ST.S_DURATION " +
             "FROM SPR_SPEECH_TABLE ST " +
             "left join SPR_EVENT E ON E.VAL = ST.S_EVENT " +
             "left join SPR_CALLTYPE C ON C.VAL = ST.S_CALLTYPE " +
             "left join SPR_STATUS S ON S.VAL = ST.S_STATUS " +
             "left join SPR_SELSTATUS SS ON SS.VAL = ST.S_SELSTATUS WHERE ST.S_EVENT <> 10";
 
-    private String countSql="SELECT COUNT(*) FROM SPR_SPEECH_TABLE";
+    private final String countSql="SELECT COUNT(*) FROM SPR_SPEECH_TABLE";
+
+
+    private String ping= "SELECT 1 FROM SPR_SPEECH_TABLE";
+
 
     @Transactional(readOnly = true)
     @Override
@@ -51,7 +53,6 @@ public SpeachRepositoryIbaseImpl(JdbcTemplate jbdc){
     @Override
     public List<Speach> getPageOrderById(Page p) {
         String sql=addLimitPagination(addOrderByIdDESC(getAll), p.getStartRow(),p.getEndofPage());
-       // System.out.println(sql);
         return  jdbcTemplate.query(sql,new SpeachIbaseRowExtractorIbase());
     }
 
@@ -65,12 +66,10 @@ public SpeachRepositoryIbaseImpl(JdbcTemplate jbdc){
     @Transactional(readOnly = true)
     @Override
     public List<Speach> getAllByPeriod(Date dateStart, Date dateEnd) {
-      SimpleDateFormat simpleDateFormat=new SimpleDateFormat("dd.MM.yyyy");
       String d1=parseDate(dateStart);
       String d2=parseDate(dateEnd);
       String sql=addOrderByDate(addWhere(getAll," ST.S_DATETIME BETWEEN '"+d1+"' AND '"+d2+"' "));
       return  jdbcTemplate.query(sql,new SpeachIbaseRowExtractorIbase());
-
     }
 
     /**
@@ -110,6 +109,14 @@ public SpeachRepositoryIbaseImpl(JdbcTemplate jbdc){
         return  jdbcTemplate.query(sql,new SpeachIbaseRowExtractorIbase());
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<Speach> getPageLessId(Page p, Long id) {
+        String sql=addLimitPagination(addOrderByIdDESC(addWhere(getAll, "ST.S_INCKEY <"+id)), p.getStartRow(),p.getEndofPage());
+        // System.out.println(sql);
+        return  jdbcTemplate.query(sql,new SpeachIbaseRowExtractorIbase());
+    }
+
     /**
      * Найти последний id
      * @return
@@ -126,6 +133,13 @@ public SpeachRepositoryIbaseImpl(JdbcTemplate jbdc){
         });
         if (id==null) id=-1l;
         return id;
+    }
+
+    @Override
+    public void ping() {
+
+        jdbcTemplate.execute(ping);
+        return;
     }
 
     private  String addLimit(String sql, int limit) {

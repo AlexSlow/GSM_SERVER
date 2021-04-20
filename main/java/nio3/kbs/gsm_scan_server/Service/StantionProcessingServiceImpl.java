@@ -6,6 +6,7 @@ import nio3.kbs.gsm_scan_server.DataBase.Sourses.ConnectionFactory;
 import nio3.kbs.gsm_scan_server.DtoRouter.DtoRouter;
 import nio3.kbs.gsm_scan_server.clients.ClientNotify;
 import nio3.kbs.gsm_scan_server.clients.Settings;
+import nio3.kbs.gsm_scan_server.clients.StantionStatus;
 import nio3.kbs.gsm_scan_server.configuration.Planners;
 import nio3.kbs.gsm_scan_server.factory.RouterFactory;
 import nio3.kbs.gsm_scan_server.factory.SpeachFactory;
@@ -88,11 +89,11 @@ public class StantionProcessingServiceImpl implements StantionProcessingService 
                       ScheduledFuture future=taskScheduler.schedule(runableSpeachMonitoring,periodicTrigger);
                       runableSpeachMonitoring.setFuture(future);
 
-               stantion.setActive(true);
+               stantion.setStatus(StantionStatus.Online);
             }catch (Exception e){
                 e.printStackTrace();
                 log.error(e.getMessage());
-                stantion.setActive(false);
+                stantion.setStatus(StantionStatus.notAvailable);
 
             }finally {
 
@@ -106,9 +107,19 @@ public class StantionProcessingServiceImpl implements StantionProcessingService 
     public void stop() {
         state=false;
         taskScheduler.shutdown();
-        settings.getStantionList().forEach(s->s.setActive(false));
+
+        settings.getStantionList().forEach(s->{
+            if (s.getStatus().equals(StantionStatus.Online))
+            s.setStatus(StantionStatus.Offline);
+        });
         clientNotify.sendAllStantions(stantionToDtoFactory.factory(settings.getStantionList()));
     }
+
+    @Override
+    public Boolean getStatus() {
+        return state;
+    }
+
     @PostConstruct
     private void init(){
         periodicTrigger = planners.getTrigger(settings.getTimeQuery());

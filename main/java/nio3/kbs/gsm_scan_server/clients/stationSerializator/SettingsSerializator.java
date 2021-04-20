@@ -43,7 +43,7 @@ private Path path;
                 log.warn("ошибка. Нет файла "+file_name);
             }
 
-        return null;
+        return new Settings();
     }
     private void initFile() throws IOException {
         path= Paths.get(file_name);

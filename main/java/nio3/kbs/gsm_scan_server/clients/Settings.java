@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 @Log4j
@@ -20,17 +21,8 @@ public class Settings {
     private int TimeOut;
     private int TimeQuery;
 
-    private static Integer idCount=0;
-    private List<Stantion> stantionList=new ArrayList<>();
-
-    /**
-     * Предназначен при инициализацц станций для перераспределения id
-     * @param stantion
-     */
-    public void addAndGenerateId(Stantion stantion){
-        stantion.setId(idCount++);
-        stantionList.add(stantion);
-    }
+    private  Long idCount;
+    private List<Stantion> stantionList= Collections.synchronizedList(new ArrayList<>());
 
     /**
      * При обновлении станции. Если Id будет не пустым, то будет обновление.
@@ -39,7 +31,7 @@ public class Settings {
 
     public void add(@NonNull Stantion stantion){
         if (stantion.getId()==null) {
-            stantion.setId(idCount++);
+            stantion.setId(++idCount);
             stantionList.add(stantion);
         }else {
             Stantion oldStantion=getById(stantion.getId());
@@ -56,29 +48,12 @@ public class Settings {
         }
 
     }
-    public void addList(List<Stantion> stantions){
-        if (stantions!=null){
-            stantions.forEach(s->{
-                this.add(s);
-            });
-        }else {
-            log.warn("Список станций пуст!");
-        }
-    }
 
-    public void addListWithGenerateId(List<Stantion> stantions){
-        if (stantions!=null){
-            stantions.forEach(s->{
-                this.addAndGenerateId(s);
-            });
-        }
-    }
-
-    public Stantion getById(Integer id){
+    public Stantion getById(Long id){
         for(Stantion stantion:stantionList) if (stantion.getId().equals(id)) return stantion;
         throw new RuntimeException("Отстуствует станция");
     }
-    public void removeById(Integer id){
+    public void removeById(Long id){
         remove(getById(id));
     }
     public void remove(@NonNull Stantion stantion){
@@ -95,10 +70,11 @@ public class Settings {
        Settings settings= settingsSerializator.deserialize();
        if (settings==null) return;
        if (settings.stantionList!=null)
-           settings.stantionList.forEach(s->s.setActive(false));
-       this.addListWithGenerateId(settings.stantionList);
+           settings.stantionList.forEach(s->s.setStatus(StantionStatus.notAvailable));
+       this.setStantionList(settings.getStantionList());
        this.TimeOut=settings.TimeOut;
        this.TimeQuery=settings.TimeQuery;
+       this.idCount=settings.idCount;
        log.info("Инициализация станций");
     }
 
@@ -110,15 +86,5 @@ public class Settings {
         settingsSerializator.serialize(this);
     }
 
-    /**
-     * Нужно для сброса активности перед сериализаций (в будущем нужно оптимизировать)
-     * Уже устарел, так как активность теперь не сериализуется
-     * @param isActive
-     */
-    public void setActive(boolean isActive){
-        stantionList.forEach(s->{
-            s.setActive(isActive);
-        });
-    }
 
 }

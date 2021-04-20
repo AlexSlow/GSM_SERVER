@@ -6,4 +6,6 @@ public abstract class Topics {
     public static final String TOPIC_SPEACH="/queue/speach";
     public static final String TOPIC_MONITORING_STATUS="/topic/MonitoringStatus";
 
+    public  static  final  String TOPIC_CLIENTS="/topic/clients";
+
 }

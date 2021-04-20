@@ -1,10 +1,9 @@
 package nio3.kbs.gsm_scan_server.controller;
 
 import lombok.extern.log4j.Log4j;
-import nio3.kbs.gsm_scan_server.DTO.Response;
+
 import nio3.kbs.gsm_scan_server.DTO.StantionDto;
 import nio3.kbs.gsm_scan_server.clients.*;
-import nio3.kbs.gsm_scan_server.configuration.Topics;
 import nio3.kbs.gsm_scan_server.factory.StantionToDtoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -32,6 +31,7 @@ public class ClientAndStantionRestController {
     public static final String TEST="test";
     public static final String GET_STANTION_BY_ID="getStantion/{id}";
 
+    public static final  String GET_CLIENTS="clients";
 
     @Autowired
     private volatile ClientServiceInterface clientService;
@@ -56,7 +56,7 @@ public class ClientAndStantionRestController {
     }
 
     @DeleteMapping(value = REMOVE_STANTION)
-    public ResponseEntity removeStantion(@PathVariable Integer id)
+    public ResponseEntity removeStantion(@PathVariable Long id)
     {
         try {
             log.debug("Пришел запрос на удаление станции "+id);
@@ -72,7 +72,7 @@ public class ClientAndStantionRestController {
     }
     @PostMapping(value = SUBSCRIBE)
     public ResponseEntity subscribe (
-            @RequestParam(name = "stantionId",required = false) Integer stantionDtoId,
+            @RequestParam(name = "stantionId",required = false) Long stantionDtoId,
             @RequestParam(name = "userUUID",required = false)  String userUUID){
         log.info("Запрос на подписку "+userUUID+" "+stantionDtoId);
         try {
@@ -114,11 +114,20 @@ public class ClientAndStantionRestController {
         }
     }
     @GetMapping(GET_STANTION_BY_ID)
-    public ResponseEntity<Stantion> getStantionById(@PathVariable Integer id){
+    public ResponseEntity<Stantion> getStantionById(@PathVariable Long id){
         try {
             return new ResponseEntity<>(settings.getById(id),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(GET_CLIENTS)
+    public ResponseEntity<List<Client>> getAllClients (){
+        try {
+        return new ResponseEntity<>(clientService.getAll(),HttpStatus.OK);
+        }catch (Exception e){
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

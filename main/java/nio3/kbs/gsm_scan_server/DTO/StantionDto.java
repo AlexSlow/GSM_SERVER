@@ -1,15 +1,16 @@
 package nio3.kbs.gsm_scan_server.DTO;
 
 import lombok.Data;
+import nio3.kbs.gsm_scan_server.clients.StantionStatus;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Data
 public class StantionDto implements Serializable {
-    private Integer id;
+    private Long id;
     private String name;
-    private boolean isActive;
+    private transient StantionStatus status;
     public StantionDto(){}
 
     @Override

@@ -6,9 +6,15 @@ import nio3.kbs.gsm_scan_server.DataBase.Sourses.Page;
 @Data
 public class PageStantionIdDto {
     Page page;
-    Integer StantionId;
+    Long StantionId;
 
-    public PageStantionIdDto(Page page, Integer stantionId) {
+    /**
+     * Используется только в повторном обращении. Просто данный паект используется в 2-х
+     * операциях
+     */
+    Long SpeachId;
+
+    public PageStantionIdDto(Page page, Long stantionId) {
         this.page = page;
         StantionId = stantionId;
     }
